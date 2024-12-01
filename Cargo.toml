@@ -1,0 +1,18 @@
+[package]
+name = "rust_nrjv_aoc_2024"
+version = "0.0.1"
+authors = ["Nicolas Vidal <pro@nicolasvidal.fr>"]
+edition = "2021"
+
+[lib]
+bench = false
+
+[profile.release]
+lto = "fat"
+codegen-units = 1
+
+[dependencies]
+rust-crypto = "0.2.36"
+aoc-runner = "0.3.0"
+aoc-runner-derive = "0.3.0"
+heapless = "0.8.0"
