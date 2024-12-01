@@ -2,7 +2,7 @@ use std::iter::Iterator;
 use std::str::FromStr;
 
 #[aoc(day1, part1)]
-fn solve_part1(input: &str) -> u32 {
+pub fn solve_part1(input: &str) -> u32 {
     let mut left: heapless::Vec<u32, 1024> = heapless::Vec::new();
     let mut right: heapless::Vec<u32, 1024> = heapless::Vec::new();
     for line in input.lines() {
@@ -22,7 +22,7 @@ fn solve_part1(input: &str) -> u32 {
 }
 
 #[aoc(day1, part2)]
-fn solve_part2(input: &str) -> u32 {
+pub fn solve_part2(input: &str) -> u32 {
     let mut left: heapless::Vec<usize, 1024> = heapless::Vec::new();
     let mut right: heapless::Vec<usize, 1024> = heapless::Vec::new();
     for line in input.lines() {

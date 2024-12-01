@@ -4,6 +4,10 @@ version = "0.0.1"
 authors = ["Nicolas Vidal <pro@nicolasvidal.fr>"]
 edition = "2021"
 
+[[bench]]
+name = "day1"
+harness = false
+
 [lib]
 bench = false
 
@@ -16,3 +20,4 @@ rust-crypto = "0.2.36"
 aoc-runner = "0.3.0"
 aoc-runner-derive = "0.3.0"
 heapless = "0.8.0"
+criterion = { package = "codspeed-criterion-compat", version = "*" }
