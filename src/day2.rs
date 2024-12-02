@@ -280,34 +280,9 @@ impl State2 {
 pub fn part2(input: &str) -> u32 {
     let mut safe_reports = 0u32;
     let input = input.as_bytes();
-
-    let mut split_position = input.len() / 2;
-    while input[split_position] != b'\n' && input[split_position] != b'\r' {
-        split_position += 1;
-    }
-
-    let first_input = &input[..split_position];
-    let second_input = &input[split_position..];
-
-    std::thread::scope(|s| {
-        let handle_1 = s.spawn(|| {
-            find_valid_sequences(first_input)
-        });
-        let handle_2 = s.spawn(|| {
-            find_valid_sequences(second_input)
-        });
-
-        safe_reports += handle_1.join().unwrap();
-        safe_reports += handle_2.join().unwrap();
-    });
-
-    safe_reports
-}
-
-fn find_valid_sequences(input: &[u8]) -> u32 {
     let mut byte_iter = input.iter();
+
     let mut state: State2 = Default::default();
-    let mut safe_reports = 0u32;
 
     loop {
         match byte_iter.next() {
@@ -335,5 +310,6 @@ fn find_valid_sequences(input: &[u8]) -> u32 {
             }
         }
     }
+
     safe_reports
 }
