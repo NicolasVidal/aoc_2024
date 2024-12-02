@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use std::iter::Iterator;
 use std::str::FromStr;
 
@@ -20,7 +21,6 @@ pub fn part1(input: &str) -> u32 {
     }
     total
 }
-
 #[aoc(day1, part2)]
 pub fn part2(input: &str) -> u32 {
     let mut left: heapless::Vec<usize, 1024> = heapless::Vec::new();
