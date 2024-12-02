@@ -45,8 +45,8 @@ fn fill_columns(input: &str) -> (heapless::Vec<u32, 1024>, heapless::Vec<u32, 10
         let line_slice = &input_bytes[offset..(offset + 13)];
 
         let (left_value, right_value) = fast_line_parsing(line_slice);
-        left.push(left_value.into()).unwrap();
-        right.push(right_value.into()).unwrap();
+        left.push(left_value).unwrap();
+        right.push(right_value).unwrap();
         offset += 13;
 
         while offset < full_bytes_count && (input_bytes[offset] == b'\n' || input_bytes[offset] == b'\r') {
