@@ -1,6 +1,6 @@
+use std::fmt::Display;
 use std::iter::Iterator;
 use std::str::FromStr;
-use radsort::sort;
 
 #[aoc(day1, part1)]
 pub fn part1(input: &str) -> u32 {
@@ -12,8 +12,8 @@ pub fn part1(input: &str) -> u32 {
         right.push(u32::from_str(tokens.next().unwrap()).unwrap()).unwrap();
     }
 
-    sort(left.as_mut_slice());
-    sort(right.as_mut_slice());
+    left.sort_unstable();
+    right.sort_unstable();
 
     let mut total = 0u32;
     for (a, b) in left.iter().zip(right.iter()) {
