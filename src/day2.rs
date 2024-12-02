@@ -61,7 +61,7 @@ fn invalid_report(line: &str, mut drop_index: Option<usize>) -> bool {
 }
 
 #[aoc(day2, part1)]
-pub fn solve_part1(input: &str) -> u32 {
+pub fn part1(input: &str) -> u32 {
     let mut safe_reports = 0u32;
     'outer: for line in input.lines() {
         if invalid_report(line, None) {
@@ -74,7 +74,7 @@ pub fn solve_part1(input: &str) -> u32 {
 }
 
 #[aoc(day2, part2)]
-pub fn solve_part2(input: &str) -> u32 {
+pub fn part2(input: &str) -> u32 {
     let mut safe_reports = 0u32;
     for line in input.lines() {
         let count = line.split_whitespace().count();
