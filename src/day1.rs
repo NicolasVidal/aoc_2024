@@ -1,15 +1,41 @@
-use std::fmt::Display;
 use std::iter::Iterator;
-use std::str::FromStr;
+
+pub fn fast_u32_parsing(line: &[u8]) -> u32 {
+    let mut result = 0u32;
+
+    const TO_REMOVE: u32 = (b'0' as u32) * 10000
+    + (b'0' as u32) * 1000
+    + (b'0' as u32) * 100
+    + (b'0' as u32) * 10
+    + (b'0' as u32);
+
+    result += line[0] as u32 * 10000;
+    result += line[1] as u32 * 1000;
+    result += line[2] as u32 * 100;
+    result += line[3] as u32 * 10;
+    result += line[4] as u32;
+
+    result - TO_REMOVE
+}
+
+pub fn fast_line_parsing(line: &[u8]) -> (u32, u32) {
+    let left = &line[0..5];
+    let right = &line[8..13];
+
+    let left = fast_u32_parsing(left);
+    let right = fast_u32_parsing(right);
+
+    (left, right)
+}
 
 #[aoc(day1, part1)]
 pub fn part1(input: &str) -> u32 {
     let mut left: heapless::Vec<u32, 1024> = heapless::Vec::new();
     let mut right: heapless::Vec<u32, 1024> = heapless::Vec::new();
     for line in input.lines() {
-        let mut tokens = line.split_whitespace();
-        left.push(u32::from_str(tokens.next().unwrap()).unwrap()).unwrap();
-        right.push(u32::from_str(tokens.next().unwrap()).unwrap()).unwrap();
+        let (left_value, right_value) = fast_line_parsing(line.as_bytes());
+        left.push(left_value).unwrap();
+        right.push(right_value).unwrap();
     }
 
     left.sort_unstable();
@@ -26,9 +52,9 @@ pub fn part2(input: &str) -> u32 {
     let mut left: heapless::Vec<usize, 1024> = heapless::Vec::new();
     let mut right: heapless::Vec<usize, 1024> = heapless::Vec::new();
     for line in input.lines() {
-        let mut tokens = line.split_whitespace();
-        left.push(usize::from_str(tokens.next().unwrap()).unwrap()).unwrap();
-        right.push(usize::from_str(tokens.next().unwrap()).unwrap()).unwrap();
+        let (left_value, right_value) = fast_line_parsing(line.as_bytes());
+        left.push(left_value as usize).unwrap();
+        right.push(right_value as usize).unwrap();
     }
 
     let mut count = [0usize; 100_000];
