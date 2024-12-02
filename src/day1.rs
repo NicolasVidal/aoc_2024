@@ -28,15 +28,37 @@ pub fn fast_line_parsing(line: &[u8]) -> (u32, u32) {
     (left, right)
 }
 
-#[aoc(day1, part1)]
-pub fn part1(input: &str) -> u32 {
+fn fill_columns(input: &str) -> (heapless::Vec<u32, 1024>, heapless::Vec<u32, 1024>) {
     let mut left: heapless::Vec<u32, 1024> = heapless::Vec::new();
     let mut right: heapless::Vec<u32, 1024> = heapless::Vec::new();
-    for line in input.lines() {
-        let (left_value, right_value) = fast_line_parsing(line.as_bytes());
-        left.push(left_value).unwrap();
-        right.push(right_value).unwrap();
+
+    let mut offset = 0usize;
+
+    let input_bytes = input.as_bytes();
+    let full_bytes_count = input_bytes.len();
+
+    loop {
+        if offset + 12 >= full_bytes_count {
+            break;
+        }
+
+        let line_slice = &input_bytes[offset..(offset + 13)];
+
+        let (left_value, right_value) = fast_line_parsing(line_slice);
+        left.push(left_value.into()).unwrap();
+        right.push(right_value.into()).unwrap();
+        offset += 13;
+
+        while offset < full_bytes_count && (input_bytes[offset] == b'\n' || input_bytes[offset] == b'\r') {
+            offset += 1;
+        }
     }
+    (left, right)
+}
+
+#[aoc(day1, part1)]
+pub fn part1(input: &str) -> u32 {
+    let (mut left, mut right) = fill_columns(input);
 
     left.sort_unstable();
     right.sort_unstable();
@@ -47,26 +69,21 @@ pub fn part1(input: &str) -> u32 {
     }
     total
 }
+
 #[aoc(day1, part2)]
 pub fn part2(input: &str) -> u32 {
-    let mut left: heapless::Vec<usize, 1024> = heapless::Vec::new();
-    let mut right: heapless::Vec<usize, 1024> = heapless::Vec::new();
-    for line in input.lines() {
-        let (left_value, right_value) = fast_line_parsing(line.as_bytes());
-        left.push(left_value as usize).unwrap();
-        right.push(right_value as usize).unwrap();
-    }
+    let (left, right) = fill_columns(input);
 
-    let mut count = [0usize; 100_000];
+    let mut count = [0u8; 100_000];
 
     for num in right {
-        count[num] += 1;
+        count[num as usize] += 1;
     }
 
     let mut similarity_score = 0usize;
 
     for num in left {
-        similarity_score += num * count[num];
+        similarity_score += num as usize * count[num as usize] as usize;
     }
 
     similarity_score as u32
