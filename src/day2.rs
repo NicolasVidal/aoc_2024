@@ -8,6 +8,7 @@ struct State {
 }
 
 impl State {
+    #[inline(always)]
     fn consume_byte(&mut self, byte: u8) -> Result<(), ()> {
         match byte {
             b'0'..=b'9' => {
@@ -36,6 +37,7 @@ impl State {
         }
     }
 
+    #[inline(always)]
     fn consume_number(&mut self, number: u8) -> Result<(), ()> {
         match (self.first, self.second) {
             (None, None) => {
@@ -69,6 +71,7 @@ impl State {
         }
     }
 
+    #[inline(always)]
     fn reset(&mut self) {
         self.prev_byte = None;
         self.first = None;
@@ -124,6 +127,7 @@ struct State2 {
 }
 
 impl State2 {
+    #[inline(always)]
     fn consume_byte(&mut self, byte: u8) -> Result<(), ()> {
         match byte {
             b'0'..=b'9' => {
@@ -152,6 +156,7 @@ impl State2 {
         }
     }
 
+    #[inline(always)]
     fn consume_number(&mut self, number: u8) -> Result<(), ()> {
         match (self.first, self.second, self.third) {
             (None, None, None) => {
@@ -267,6 +272,7 @@ impl State2 {
         }
     }
 
+    #[inline(always)]
     fn reset(&mut self) {
         self.prev_byte = None;
         self.first = None;
