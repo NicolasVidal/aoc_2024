@@ -1,5 +1,6 @@
 use std::iter::Iterator;
 
+#[inline(always)]
 pub fn fast_u32_parsing(line: &[u8]) -> u32 {
     let mut result = 0u32;
 
@@ -18,6 +19,7 @@ pub fn fast_u32_parsing(line: &[u8]) -> u32 {
     result - TO_REMOVE
 }
 
+#[inline(always)]
 pub fn fast_line_parsing(line: &[u8]) -> (u32, u32) {
     let left = &line[0..5];
     let right = &line[8..13];
@@ -28,6 +30,7 @@ pub fn fast_line_parsing(line: &[u8]) -> (u32, u32) {
     (left, right)
 }
 
+#[inline(always)]
 fn fill_columns(input: &str) -> (heapless::Vec<u32, 1024>, heapless::Vec<u32, 1024>) {
     let mut left: heapless::Vec<u32, 1024> = heapless::Vec::new();
     let mut right: heapless::Vec<u32, 1024> = heapless::Vec::new();
