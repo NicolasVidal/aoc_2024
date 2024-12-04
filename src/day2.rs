@@ -95,7 +95,7 @@ pub fn part1(input: &str) -> u32 {
                 }
                 break;
             }
-            Some(&b'\n') | Some(&b'\r') => {
+            Some(&b'\n') => {
                 if state.first.is_some() {
                     safe_reports += 1;
                 }
@@ -105,7 +105,7 @@ pub fn part1(input: &str) -> u32 {
                 if let Err(()) = state.consume_byte(byte) {
                     state.reset();
                     for &byte in byte_iter.by_ref() {
-                        if byte == b'\n' || byte == b'\r' {
+                        if byte == b'\n' {
                             break;
                         }
                     }
@@ -298,7 +298,7 @@ pub fn part2(input: &str) -> u32 {
                 }
                 break;
             }
-            Some(&b'\n') | Some(&b'\r') => {
+            Some(&b'\n') => {
                 if state.first.is_some() {
                     safe_reports += 1;
                 }
@@ -308,7 +308,7 @@ pub fn part2(input: &str) -> u32 {
                 if let Err(()) = state.consume_byte(byte) {
                     state.reset();
                     for &byte in byte_iter.by_ref() {
-                        if byte == b'\n' || byte == b'\r' {
+                        if byte == b'\n' {
                             break;
                         }
                     }

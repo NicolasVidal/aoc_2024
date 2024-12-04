@@ -530,6 +530,7 @@ dependencies = [
  "aoc-runner-derive",
  "codspeed-criterion-compat",
  "heapless",
+ "memchr",
  "rust-crypto",
 ]
 

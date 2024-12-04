@@ -52,7 +52,7 @@ fn fill_columns(input: &str) -> (heapless::Vec<u32, 1024>, heapless::Vec<u32, 10
         right.push(right_value).unwrap();
         offset += 13;
 
-        while offset < full_bytes_count && (input_bytes[offset] == b'\n' || input_bytes[offset] == b'\r') {
+        while offset < full_bytes_count && (input_bytes[offset] == b'\n') {
             offset += 1;
         }
     }
