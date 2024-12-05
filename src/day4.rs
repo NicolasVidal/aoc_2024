@@ -16,8 +16,7 @@ pub fn part1(input: &str) -> u32 {
     let mut total = 0u32;
     let bytes = input.as_bytes();
 
-    // let line_length = memchr::memchr(b'\n', bytes).unwrap();
-    let line_length = bytes.iter().position(|&x| x == b'\n').unwrap();
+    let line_length = memchr::memchr(b'\n', bytes).unwrap();
     let real_length = line_length + 1;
 
     let lines_count = (bytes.len()
@@ -32,15 +31,7 @@ pub fn part1(input: &str) -> u32 {
         let line_end = line_start + line_length;
         let line_bytes = &bytes[line_start..line_end];
 
-        let a_positions_enumerator = line_bytes.iter().enumerate().filter_map(|(i, &x)| {
-            if x == b'X' {
-                Some(i)
-            } else {
-                None
-            }
-        });
-
-        for x_pos in a_positions_enumerator {
+        for x_pos in memchr::memchr_iter(b'X', line_bytes) {
             if x_pos + 3 < line_length {
                 if is_match_last(x_pos + 1, x_pos + 2, x_pos + 3, line_bytes) {
                     total += 1;
@@ -123,8 +114,7 @@ pub fn part2(input: &str) -> u32 {
     let mut total = 0u32;
     let bytes = input.as_bytes();
 
-    // let line_length = memchr::memchr(b'\n', bytes).unwrap();
-    let line_length = bytes.iter().position(|&x| x == b'\n').unwrap();
+    let line_length = memchr::memchr(b'\n', bytes).unwrap();
     let real_length = line_length + 1;
 
     let lines_count = (bytes.len()
@@ -139,16 +129,7 @@ pub fn part2(input: &str) -> u32 {
         let line_end = line_start + line_length;
         let line_bytes = &bytes[line_start..(line_end - 1)];
 
-
-        let a_positions_enumerator = line_bytes.iter().enumerate().filter_map(|(i, &x)| {
-            if x == b'A' {
-                Some(i)
-            } else {
-                None
-            }
-        });
-
-        for x_pos in a_positions_enumerator {
+        for x_pos in memchr::memchr_iter(b'A', line_bytes) {
             let top_left = real_length * (line - 1) + x_pos - 1;
             let top_right = real_length * (line - 1) + x_pos + 1;
             let bottom_left = real_length * (line + 1) + x_pos - 1;
