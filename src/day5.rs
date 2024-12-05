@@ -2,6 +2,12 @@ use std::iter::Iterator;
 use std::str::FromStr;
 use rustc_hash::FxHashMap;
 
+#[inline(always)]
+fn parse_two_digit_number(byte1: u8, byte2: u8) -> u8 {
+    const OFFSET: u8 = b'0' * 10 + b'0';
+    (byte1 * 10) + byte2 - OFFSET
+}
+
 #[aoc(day5, part1)]
 pub fn part1(input: &str) -> u32 {
     let mut total = 0u32;
@@ -15,9 +21,10 @@ pub fn part1(input: &str) -> u32 {
             break;
         }
 
-        let mut iter = line.split('|');
-        let part1 =  u8::from_str(iter.next().unwrap()).unwrap();
-        let part2 =  u8::from_str(iter.next().unwrap()).unwrap();
+        let lines_bytes = line.as_bytes();
+
+        let part1 = parse_two_digit_number(lines_bytes[0], lines_bytes[1]);
+        let part2 = parse_two_digit_number(lines_bytes[3], lines_bytes[4]);
 
         order_map.entry(part1).or_insert(Vec::new()).push(part2);
     }
@@ -56,9 +63,10 @@ pub fn part2(input: &str) -> u32 {
             break;
         }
 
-        let mut iter = line.split('|');
-        let part1 =  u8::from_str(iter.next().unwrap()).unwrap();
-        let part2 =  u8::from_str(iter.next().unwrap()).unwrap();
+        let lines_bytes = line.as_bytes();
+
+        let part1 = parse_two_digit_number(lines_bytes[0], lines_bytes[1]);
+        let part2 = parse_two_digit_number(lines_bytes[3], lines_bytes[4]);
 
         order_map.entry(part1).or_insert(Vec::new()).push(part2);
     }
