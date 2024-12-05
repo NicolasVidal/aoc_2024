@@ -4,8 +4,8 @@ use rustc_hash::FxHashMap;
 
 #[inline(always)]
 fn parse_two_digit_number(byte1: u8, byte2: u8) -> u8 {
-    const OFFSET: u8 = b'0' * 10 + b'0';
-    (byte1 * 10) + byte2 - OFFSET
+    const OFFSET: u8 = b'0';
+    (byte1 - OFFSET) * 10 + byte2 - OFFSET
 }
 
 #[aoc(day5, part1)]
