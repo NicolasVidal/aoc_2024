@@ -20,6 +20,10 @@ harness = false
 name = "day4"
 harness = false
 
+[[bench]]
+name = "day5"
+harness = false
+
 [lib]
 bench = false
 
@@ -33,4 +37,5 @@ aoc-runner = "0.3.0"
 aoc-runner-derive = "0.3.0"
 heapless = "0.8.0"
 memchr = "2.7.4"
+rustc-hash = "2.1.0"
 criterion = { package = "codspeed-criterion-compat", version = "*" }
