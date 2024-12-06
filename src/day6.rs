@@ -1,3 +1,6 @@
+const BIG_ARR_SIZE_P1: usize = 2usize.pow(15);
+const BIG_ARR_SIZE_P2: usize = 130*130;
+
 #[derive(Debug, Clone, Copy)]
 enum Direction {
     Up,
@@ -22,7 +25,7 @@ impl Direction {
 pub fn part1(input: &str) -> u32 {
     let mut total = 0u32;
     let input_bytes = input.as_bytes();
-    let mut array = [0u8; 150 * 150];
+    let mut array = [0u8; BIG_ARR_SIZE_P1];
 
     let line_length = memchr::memchr(b'\n', input_bytes).unwrap() + 1;
     let target_line_length = line_length - 1;
@@ -96,7 +99,8 @@ pub fn part1(input: &str) -> u32 {
 pub fn part2(input: &str) -> u32 {
     let mut total = 0u32;
     let input_bytes = input.as_bytes();
-    let mut array = [0u8; 150 * 150];
+    let mut array = [0u8; BIG_ARR_SIZE_P2];
+    let mut walked_array = [0u8; BIG_ARR_SIZE_P2];
 
     let line_length = memchr::memchr(b'\n', input_bytes).unwrap() + 1;
     let target_line_length = line_length - 1;
@@ -131,8 +135,8 @@ pub fn part2(input: &str) -> u32 {
             if position != start_position {
                 let mut arr_copy = array.clone();
                 arr_copy[position] = b'#';
-                let mut walked_array = [0u8; 150 * 150];
 
+                walked_array[0..total_size].fill(0);
                 let mut current_direction = Direction::Up;
                 let mut position = start_position;
                 loop {
