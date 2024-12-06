@@ -1,4 +1,4 @@
-const BIG_ARR_SIZE_P1: usize = 2usize.pow(15);
+const BIG_ARR_SIZE_P1: usize = 130*130;
 const BIG_ARR_SIZE_P2: usize = 130*130;
 
 #[derive(Debug, Clone, Copy)]
