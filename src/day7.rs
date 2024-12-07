@@ -1,3 +1,5 @@
+use std::thread::ScopedJoinHandle;
+
 #[derive(Debug)]
 struct Line {
     total: u64,
@@ -214,73 +216,89 @@ impl Solution2 {
 
 #[aoc(day7, part2)]
 pub fn part2(input: &str) -> u64 {
-    let mut total = 0u64;
+    let mut super_total = 0u64;
 
     let input = input.as_bytes();
     let mut bytes_enumerator = input.into_iter().copied();
 
-    while let Some(line) = Line::parse(&mut bytes_enumerator) {
-        let mut current_solution = Solution2 {
-            number_digits: std::array::from_fn(|i| {
-                if i >= line.candidates.len() {
-                    return 0;
-                }
-                let mut number = line.candidates[i];
-                let mut num_digits = 0;
+    std::thread::scope(|scope| {
+        const MAX_THREADS: usize = 16;
+        let mut thread_joins = heapless::Vec::<ScopedJoinHandle<u64>, MAX_THREADS>::new();
+        let max_threads = (num_cpus::get_physical().min(MAX_THREADS).saturating_sub(1)).min(1);
+        while let Some(line) = Line::parse(&mut bytes_enumerator) {
+            if thread_joins.len() == max_threads {
+                super_total += thread_joins.pop().unwrap().join().unwrap();
+            }
+
+            thread_joins.push(scope.spawn(move || {
+                let mut current_solution = Solution2 {
+                    number_digits: std::array::from_fn(|i| {
+                        if i >= line.candidates.len() {
+                            return 0;
+                        }
+                        let mut number = line.candidates[i];
+                        let mut num_digits = 0;
+                        loop {
+                            num_digits += 1;
+                            number /= 10;
+                            if number == 0 {
+                                break;
+                            }
+                        }
+                        num_digits
+                    }),
+                    operations: [Operation2::Add; 16],
+                    total: 0,
+                    current: 0,
+                };
+                let max_length = line.candidates.len();
                 loop {
-                    num_digits += 1;
-                    number /= 10;
-                    if number == 0 {
-                        break;
+                    if current_solution.current >= max_length {
+                        if current_solution.total == line.total {
+                            return line.total;
+                        }
+                        current_solution.backtrack(&line);
+                        continue;
                     }
-                }
-                num_digits
-            }
-            ),
-            operations: [Operation2::Add; 16],
-            total: 0,
-            current: 0,
-        };
-        let max_length = line.candidates.len();
-        loop {
-            if current_solution.current >= max_length {
-                if current_solution.total == line.total {
-                    total += line.total;
-                    break;
-                }
-                current_solution.backtrack(&line);
-                continue;
-            }
 
-            if current_solution.total > line.total
-                || current_solution.operations[current_solution.current] == Operation2::End
-            {
-                if current_solution.current == 0 {
-                    break;
-                }
-                current_solution.backtrack(&line);
-                continue;
-            }
+                    if current_solution.total > line.total
+                        || current_solution.operations[current_solution.current] == Operation2::End
+                    {
+                        if current_solution.current == 0 {
+                            break;
+                        }
+                        current_solution.backtrack(&line);
+                        continue;
+                    }
 
-            match current_solution.operations[current_solution.current] {
-                Operation2::Add => {
-                    current_solution.total += line.candidates[current_solution.current];
+                    match current_solution.operations[current_solution.current] {
+                        Operation2::Add => {
+                            current_solution.total += line.candidates[current_solution.current];
+                        }
+                        Operation2::Multiply => {
+                            current_solution.total *= line.candidates[current_solution.current];
+                        }
+                        Operation2::Concatenate => {
+                            let mut sub_total = current_solution.total;
+                            sub_total *= 10u64.pow(
+                                current_solution.number_digits[current_solution.current] as u32,
+                            );
+                            current_solution.total =
+                                sub_total + line.candidates[current_solution.current];
+                        }
+                        Operation2::End => {
+                            panic!("Invalid state");
+                        }
+                    }
+                    current_solution.current += 1;
                 }
-                Operation2::Multiply => {
-                    current_solution.total *= line.candidates[current_solution.current];
-                }
-                Operation2::Concatenate => {
-                    let mut sub_total = current_solution.total;
-                    sub_total *= 10u64.pow(current_solution.number_digits[current_solution.current] as u32);
-                    current_solution.total = sub_total + line.candidates[current_solution.current];
-                }
-                Operation2::End => {
-                    panic!("Invalid state");
-                }
-            }
-            current_solution.current += 1;
+                0u64
+            })).unwrap();
         }
-    }
+        for join in thread_joins {
+            super_total += join.join().unwrap();
+        }
+    });
 
-    total
+    super_total
 }

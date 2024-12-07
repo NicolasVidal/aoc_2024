@@ -46,4 +46,5 @@ aoc-runner-derive = "0.3.0"
 heapless = "0.8.0"
 memchr = "2.7.4"
 rustc-hash = "2.1.0"
+num_cpus = "1.16.0"
 criterion = { package = "codspeed-criterion-compat", version = "*" }
