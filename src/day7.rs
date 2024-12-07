@@ -172,14 +172,32 @@ enum Operation2 {
 
 impl Operation2 {
     #[inline(always)]
-    fn cycle(&mut self) {
-        *self = match self {
-            Self::Add => Self::Multiply,
-            Self::Multiply => Self::Concatenate,
-            Self::Concatenate => Self::End,
-            Self::End => {
-                panic!("Do not cycle en end !")
-            }
+    fn init(prev_total: Option<u64>, num: u64) -> Self {
+        match (prev_total, num) {
+            (Some(x1), x2) if x1 + x2 > x1 * x2 => Self::Multiply,
+            _ => Self::Add,
+        }
+    }
+
+    #[inline(always)]
+    fn cycle(&mut self, prev_total: Option<u64>, num: u64) {
+        *self = match (prev_total, num) {
+            (Some(x1), x2) if x1 + x2 > x1 * x2 => match self {
+                Self::Multiply => Self::Add,
+                Self::Add => Self::Concatenate,
+                Self::Concatenate => Self::End,
+                Self::End => {
+                    panic!("Do not cycle en end !")
+                }
+            },
+            _ => match self {
+                Self::Add => Self::Multiply,
+                Self::Multiply => Self::Concatenate,
+                Self::Concatenate => Self::End,
+                Self::End => {
+                    panic!("Do not cycle en end !")
+                }
+            },
         }
     }
 }
@@ -195,8 +213,6 @@ struct Solution2 {
 impl Solution2 {
     #[inline(always)]
     fn backtrack(&mut self, line: &Line) {
-        self.operations[self.current] = Operation2::Add;
-
         self.current -= 1;
         self.total = match self.operations[self.current] {
             Operation2::Add => self.total - line.candidates[self.current],
@@ -208,7 +224,12 @@ impl Solution2 {
                 panic!("Invalid state in backtrack.");
             }
         };
-        self.operations[self.current].cycle();
+        let prev = if self.current == 0 {
+            None
+        } else {
+            Some(self.total)
+        };
+        self.operations[self.current].cycle(prev, line.candidates[self.current]);
     }
 }
 
@@ -235,21 +256,40 @@ pub fn part2(input: &str) -> u64 {
                     }
                 }
                 num_digits
-            }
-            ),
+            }),
             operations: [Operation2::Add; 16],
             total: 0,
             current: 0,
         };
+        current_solution.operations[0] = Operation2::init(None, line.candidates[0]);
         let max_length = line.candidates.len();
+        let mut first_found = false;
         loop {
+            // if current_solution.total > line.total {
+            //     dbg!(line);
+            //     dbg!(current_solution);
+            //     exit(0);
+            //     break;
+            // }
+
             if current_solution.current >= max_length {
                 if current_solution.total == line.total {
                     total += line.total;
                     break;
                 }
+                if current_solution.total < line.total {
+                    first_found = true;
+                }
+                if !first_found {
+                    break;
+                }
+
                 current_solution.backtrack(&line);
                 continue;
+            }
+
+            if current_solution.total > line.total && !first_found {
+                break;
             }
 
             if current_solution.total > line.total
@@ -271,7 +311,8 @@ pub fn part2(input: &str) -> u64 {
                 }
                 Operation2::Concatenate => {
                     let mut sub_total = current_solution.total;
-                    sub_total *= 10u64.pow(current_solution.number_digits[current_solution.current] as u32);
+                    sub_total *=
+                        10u64.pow(current_solution.number_digits[current_solution.current] as u32);
                     current_solution.total = sub_total + line.candidates[current_solution.current];
                 }
                 Operation2::End => {
@@ -279,6 +320,12 @@ pub fn part2(input: &str) -> u64 {
                 }
             }
             current_solution.current += 1;
+            if current_solution.current < max_length {
+                current_solution.operations[current_solution.current] = Operation2::init(
+                    Some(current_solution.total),
+                    line.candidates[current_solution.current],
+                );
+            }
         }
     }
 
