@@ -1,5 +1,3 @@
-use std::iter::Cycle;
-
 #[derive(Debug)]
 struct Line {
     total: u64,
@@ -116,7 +114,7 @@ impl Solution {
 pub fn part1(input: &str) -> u64 {
     let mut total = 0u64;
 
-    let mut input = input.as_bytes();
+    let input = input.as_bytes();
     let mut bytes_enumerator = input.into_iter().copied();
 
     while let Some(line) = Line::parse(&mut bytes_enumerator) {
@@ -188,6 +186,7 @@ impl Operation2 {
 
 #[derive(Debug, Eq, PartialEq)]
 struct Solution2 {
+    number_digits: [u8; 16],
     operations: [Operation2; 16],
     total: u64,
     current: usize,
@@ -203,16 +202,7 @@ impl Solution2 {
             Operation2::Add => self.total - line.candidates[self.current],
             Operation2::Multiply => self.total / line.candidates[self.current],
             Operation2::Concatenate => {
-                let mut sub_total = self.total - line.candidates[self.current];
-                let mut current_number = line.candidates[self.current];
-                loop {
-                    sub_total /= 10;
-                    current_number /= 10;
-                    if current_number == 0 {
-                        break;
-                    }
-                }
-                sub_total
+                self.total / 10u64.pow(self.number_digits[self.current] as u32)
             }
             Operation2::End => {
                 panic!("Invalid state in backtrack.");
@@ -226,11 +216,27 @@ impl Solution2 {
 pub fn part2(input: &str) -> u64 {
     let mut total = 0u64;
 
-    let mut input = input.as_bytes();
+    let input = input.as_bytes();
     let mut bytes_enumerator = input.into_iter().copied();
 
     while let Some(line) = Line::parse(&mut bytes_enumerator) {
         let mut current_solution = Solution2 {
+            number_digits: std::array::from_fn(|i| {
+                if i >= line.candidates.len() {
+                    return 0;
+                }
+                let mut number = line.candidates[i];
+                let mut num_digits = 0;
+                loop {
+                    num_digits += 1;
+                    number /= 10;
+                    if number == 0 {
+                        break;
+                    }
+                }
+                num_digits
+            }
+            ),
             operations: [Operation2::Add; 16],
             total: 0,
             current: 0,
@@ -265,14 +271,7 @@ pub fn part2(input: &str) -> u64 {
                 }
                 Operation2::Concatenate => {
                     let mut sub_total = current_solution.total;
-                    let mut current_number = line.candidates[current_solution.current];
-                    loop {
-                        sub_total *= 10;
-                        current_number /= 10;
-                        if current_number == 0 {
-                            break;
-                        }
-                    }
+                    sub_total *= 10u64.pow(current_solution.number_digits[current_solution.current] as u32);
                     current_solution.total = sub_total + line.candidates[current_solution.current];
                 }
                 Operation2::End => {
