@@ -7,6 +7,7 @@ struct Line {
 }
 
 impl Line {
+    #[inline(always)]
     fn parse(bytes: &mut impl Iterator<Item = u8>) -> Option<Self> {
         let mut total = 0;
         let mut candidates = heapless::Vec::new();
@@ -75,6 +76,7 @@ enum Operation {
 }
 
 impl Operation {
+    #[inline(always)]
     fn cycle(&mut self) {
         *self = match self {
             Self::Add => Self::Multiply,
@@ -94,6 +96,7 @@ struct Solution {
 }
 
 impl Solution {
+    #[inline(always)]
     fn backtrack(&mut self, line: &Line) {
         self.operations[self.current] = Operation::Add;
 
@@ -170,6 +173,7 @@ enum Operation2 {
 }
 
 impl Operation2 {
+    #[inline(always)]
     fn cycle(&mut self) {
         *self = match self {
             Self::Add => Self::Multiply,
@@ -190,6 +194,7 @@ struct Solution2 {
 }
 
 impl Solution2 {
+    #[inline(always)]
     fn backtrack(&mut self, line: &Line) {
         self.operations[self.current] = Operation2::Add;
 
