@@ -1,5 +1,3 @@
-use std::iter::Cycle;
-
 #[derive(Debug)]
 struct Line {
     total: u64,
@@ -113,7 +111,7 @@ impl Solution {
 pub fn part1(input: &str) -> u64 {
     let mut total = 0u64;
 
-    let mut input = input.as_bytes();
+    let input = input.as_bytes();
     let mut bytes_enumerator = input.into_iter().copied();
 
     while let Some(line) = Line::parse(&mut bytes_enumerator) {
@@ -221,7 +219,7 @@ impl Solution2 {
 pub fn part2(input: &str) -> u64 {
     let mut total = 0u64;
 
-    let mut input = input.as_bytes();
+    let input = input.as_bytes();
     let mut bytes_enumerator = input.into_iter().copied();
 
     while let Some(line) = Line::parse(&mut bytes_enumerator) {
