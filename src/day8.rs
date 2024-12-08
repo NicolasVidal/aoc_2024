@@ -1,8 +1,8 @@
-use rustc_hash::{FxHashMap, FxHashSet};
+use rustc_hash::{FxBuildHasher, FxHashMap, FxHashSet};
 
 #[aoc(day8, part1)]
 pub fn part1(input: &str) -> u32 {
-    let mut coordinates = FxHashMap::default();
+    let mut coordinates = FxHashMap::with_capacity_and_hasher(2500, FxBuildHasher::default());
 
     let bytes = input.as_bytes();
 
@@ -38,7 +38,7 @@ pub fn part1(input: &str) -> u32 {
         row + 1
     };
 
-    let mut resonance_points = FxHashSet::default();
+    let mut resonance_points = FxHashSet::with_capacity_and_hasher(2500, FxBuildHasher::default());
     for (_, vec) in coordinates.into_iter() {
         let vec_len = vec.len();
         for i in 0..vec_len {
@@ -74,7 +74,7 @@ pub fn part1(input: &str) -> u32 {
 
 #[aoc(day8, part2)]
 pub fn part2(input: &str) -> u32 {
-    let mut coordinates = FxHashMap::default();
+    let mut coordinates = FxHashMap::with_capacity_and_hasher(2500, FxBuildHasher::default());
 
     let bytes = input.as_bytes();
 
@@ -110,7 +110,7 @@ pub fn part2(input: &str) -> u32 {
         row + 1
     };
 
-    let mut resonance_points = FxHashSet::default();
+    let mut resonance_points = FxHashSet::with_capacity_and_hasher(2500, FxBuildHasher::default());
 
     for (_, v) in coordinates.iter() {
         if v.len() < 2 {
