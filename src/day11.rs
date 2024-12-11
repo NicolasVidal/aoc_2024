@@ -1,5 +1,4 @@
-use std::ptr::null_mut;
-use rustc_hash::{FxBuildHasher, FxHashMap, FxHashSet};
+use rustc_hash::{FxHashMap};
 
 fn count_digits(mut n: u64) -> u32 {
     let mut count = 0;
@@ -63,33 +62,17 @@ pub fn part1(input: &str) -> u64 {
 
     let mut total = 0u64;
 
+    let mut map = FxHashMap::default();
+
     while let Some((n, iteration)) = stack.pop() {
-        if iteration == 25 {
-            total += 1;
-            continue;
-        }
-
-        if n == 0 {
-            stack.push((1, iteration + 1));
-            continue;
-        }
-
-        let digits = count_digits(n);
-        if digits % 2 == 0 {
-            let (left, right) = split_number_in_half(n, digits);
-            stack.push((left, iteration + 1));
-            stack.push((right, iteration + 1));
-            continue;
-        }
-
-        stack.push((n * 2024, iteration + 1));
+        total += recursive_count(n, iteration, &mut map, 25);
     }
 
     total
 }
 
-pub fn recursive_count(n: u64, iteration: u64, map: &mut FxHashMap<(u64, i32), u64>) -> u64 {
-    if iteration == 75 {
+pub fn recursive_count(n: u64, iteration: u64, map: &mut FxHashMap<(u64, i32), u64>, max_iter: u64) -> u64 {
+    if iteration == max_iter {
         return 1;
     }
 
@@ -98,14 +81,14 @@ pub fn recursive_count(n: u64, iteration: u64, map: &mut FxHashMap<(u64, i32), u
     }
 
     let result = if n == 0 {
-        recursive_count(1, iteration + 1, map)
+        recursive_count(1, iteration + 1, map, max_iter)
     } else {
         let digits = count_digits(n);
         if digits % 2 == 0 {
             let (left, right) = split_number_in_half(n, digits);
-            recursive_count(left, iteration + 1, map) + recursive_count(right, iteration + 1, map)
+            recursive_count(left, iteration + 1, map, max_iter) + recursive_count(right, iteration + 1, map, max_iter)
         } else {
-            recursive_count(n * 2024, iteration + 1, map)
+            recursive_count(n * 2024, iteration + 1, map, max_iter)
         }
     };
 
@@ -152,7 +135,7 @@ pub fn part2(input: &str) -> u64 {
     let mut map = FxHashMap::default();
 
     while let Some((n, iteration)) = stack.pop() {
-        total += recursive_count(n, iteration, &mut map);
+        total += recursive_count(n, iteration, &mut map, 75);
     }
 
     total
