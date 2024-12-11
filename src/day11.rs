@@ -1,5 +1,6 @@
 use rustc_hash::{FxBuildHasher, FxHashMap, FxHasher};
 
+#[inline(always)]
 fn count_digits(mut n: u64) -> u32 {
     let mut count = 0;
     while n > 0 {
@@ -9,6 +10,7 @@ fn count_digits(mut n: u64) -> u32 {
     count as u32
 }
 
+#[inline(always)]
 fn split_number_in_half(n: u64, digits: u32) -> (u64, u64) {
     let mut left = 0;
     let mut right = 0;
@@ -74,6 +76,7 @@ pub fn part1(input: &str) -> u64 {
     total
 }
 
+#[inline(always)]
 pub fn recursive_count(n: u64, iteration: u64, map: &mut FxHashMap<(u64, i32), u64>, max_iter: u64) -> u64 {
     if iteration == max_iter {
         return 1;
