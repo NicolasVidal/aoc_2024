@@ -56,8 +56,6 @@ lto = "fat"
 codegen-units = 1
 
 [dependencies]
-serde = { version = "1.0.216", features = ["derive"] }
-postcard = { version = "1.1.1", features = ["alloc"] }
 rust-crypto = "0.2.36"
 aoc-runner = "0.3.0"
 aoc-runner-derive = "0.3.0"

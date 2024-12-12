@@ -28,8 +28,7 @@ fn split_number_in_half(n: u64, digits: u32) -> (u64, u64) {
     (left, right)
 }
 
-#[aoc(day11, part1)]
-pub fn part1(input: &str) -> u64 {
+fn compute_day_11(input: &str, count: u64) -> u64 {
     let bytes = input.as_bytes();
 
     let mut iterator = bytes.iter();
@@ -55,6 +54,8 @@ pub fn part1(input: &str) -> u64 {
 
     numbers.push(id);
 
+    numbers.sort_unstable_by_key(|&n| std::cmp::Reverse(n));
+
     let mut stack = Vec::new();
 
     for n in numbers {
@@ -66,7 +67,7 @@ pub fn part1(input: &str) -> u64 {
     let mut map = FxHashMap::with_capacity_and_hasher(2usize.pow(18), FxBuildHasher::default());
 
     while let Some((n, iteration)) = stack.pop() {
-        total += recursive_count(n, iteration, &mut map, 25);
+        total += recursive_count(n, iteration, &mut map, count);
     }
 
     total
@@ -99,46 +100,12 @@ pub fn recursive_count(n: u64, iteration: u64, map: &mut FxHashMap<(u64, i32), u
     result
 }
 
+#[aoc(day11, part1)]
+pub fn part1(input: &str) -> u64 {
+    compute_day_11(input, 25)
+}
+
 #[aoc(day11, part2)]
 pub fn part2(input: &str) -> u64 {
-    let bytes = input.as_bytes();
-
-    let mut iterator = bytes.iter();
-
-    let mut numbers = Vec::new();
-
-    let mut id = 0u64;
-    while let Some(&b) = iterator.next() {
-        match b {
-            b' ' => {
-                numbers.push(id);
-                id = 0;
-            }
-            b'\n' => {
-                break;
-            }
-            n if (b'0'..=b'9').contains(&n) => {
-                id = id * 10 + (n - b'0') as u64;
-            }
-            _ => {}
-        }
-    }
-
-    numbers.push(id);
-
-    let mut stack = Vec::new();
-
-    for n in numbers {
-        stack.push((n, 0));
-    }
-
-    let mut total = 0u64;
-
-    let mut map = FxHashMap::with_capacity_and_hasher(2usize.pow(18), FxBuildHasher::default());
-
-    while let Some((n, iteration)) = stack.pop() {
-        total += recursive_count(n, iteration, &mut map, 75);
-    }
-
-    total
+    compute_day_11(input, 75)
 }
