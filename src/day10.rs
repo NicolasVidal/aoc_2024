@@ -1,4 +1,4 @@
-use rustc_hash::{FxBuildHasher, FxHashSet};
+use rustc_hash::FxHashSet;
 
 #[aoc(day10, part1)]
 pub fn part1(input: &str) -> u64 {

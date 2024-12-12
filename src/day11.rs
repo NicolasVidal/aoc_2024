@@ -1,4 +1,4 @@
-use rustc_hash::{FxBuildHasher, FxHashMap, FxHasher};
+use rustc_hash::{FxBuildHasher, FxHashMap};
 
 #[inline(always)]
 fn count_digits(mut n: u64) -> u32 {
@@ -44,7 +44,6 @@ pub fn part1(input: &str) -> u64 {
                 id = 0;
             }
             b'\n' => {
-                numbers.push(id);
                 break;
             }
             n if (b'0'..=b'9').contains(&n) => {
@@ -64,14 +63,11 @@ pub fn part1(input: &str) -> u64 {
 
     let mut total = 0u64;
 
-    let mut map = FxHashMap::with_capacity_and_hasher(2usize.pow(11), FxBuildHasher::default());
+    let mut map = FxHashMap::with_capacity_and_hasher(2usize.pow(18), FxBuildHasher::default());
 
     while let Some((n, iteration)) = stack.pop() {
         total += recursive_count(n, iteration, &mut map, 25);
     }
-
-    // dbg!(map.capacity());
-    // dbg!(map.len());
 
     total
 }
@@ -119,7 +115,6 @@ pub fn part2(input: &str) -> u64 {
                 id = 0;
             }
             b'\n' => {
-                numbers.push(id);
                 break;
             }
             n if (b'0'..=b'9').contains(&n) => {
@@ -144,9 +139,6 @@ pub fn part2(input: &str) -> u64 {
     while let Some((n, iteration)) = stack.pop() {
         total += recursive_count(n, iteration, &mut map, 75);
     }
-
-    // dbg!(map.capacity());
-    // dbg!(map.len());
 
     total
 }
