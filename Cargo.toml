@@ -48,6 +48,10 @@ harness = false
 name = "day11"
 harness = false
 
+[[bin]]
+name = "day11_generator"
+path = "src/day11_generator.rs"
+
 [lib]
 bench = false
 
