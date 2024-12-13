@@ -1,14 +1,18 @@
 use std::hint::unreachable_unchecked;
 
 #[inline(always)]
-fn handle_machine_part1(iter: &mut std::slice::Iter<u8>) -> u32 {
-    let a_x = (iter.nth(11).unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
-    let a_y = (iter.nth(4).unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
+unsafe fn handle_machine_part1(iter: &mut std::slice::Iter<u8>) -> u32 {
+    let slice = iter.as_slice();
 
-    let b_x = (iter.nth(13).unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
-    let b_y = (iter.nth(4).unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
+    let a_x = (*slice.get_unchecked(11) - b'0') * 10 + *slice.get_unchecked(12) - b'0';
+    let a_y = (*slice.get_unchecked(17) - b'0') * 10 + *slice.get_unchecked(18) - b'0';
 
-    let mut t_x = (iter.nth(10).unwrap() - b'0') as u32;
+    let b_x = (*slice.get_unchecked(32) - b'0') * 10 + *slice.get_unchecked(33) - b'0';
+    let b_y = (*slice.get_unchecked(38) - b'0') * 10 + *slice.get_unchecked(39) - b'0';
+
+    *iter = slice[50..].iter();
+
+    let mut t_x = (iter.next().unwrap() - b'0') as u32;
 
     loop {
         match iter.next() {
@@ -65,14 +69,18 @@ fn handle_machine_part1(iter: &mut std::slice::Iter<u8>) -> u32 {
 }
 
 #[inline(always)]
-fn handle_machine_part2(iter: &mut std::slice::Iter<u8>) -> u64 {
-    let a_x = (iter.nth(11).unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
-    let a_y = (iter.nth(4).unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
+unsafe fn handle_machine_part2(iter: &mut std::slice::Iter<u8>) -> u64 {
+    let slice = iter.as_slice();
 
-    let b_x = (iter.nth(13).unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
-    let b_y = (iter.nth(4).unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
+    let a_x = (*slice.get_unchecked(11) - b'0') * 10 + *slice.get_unchecked(12) - b'0';
+    let a_y = (*slice.get_unchecked(17) - b'0') * 10 + *slice.get_unchecked(18) - b'0';
 
-    let mut t_x = (iter.nth(10).unwrap() - b'0') as u64;
+    let b_x = (*slice.get_unchecked(32) - b'0') * 10 + *slice.get_unchecked(33) - b'0';
+    let b_y = (*slice.get_unchecked(38) - b'0') * 10 + *slice.get_unchecked(39) - b'0';
+
+    *iter = slice[50..].iter();
+
+    let mut t_x = (iter.next().unwrap() - b'0') as u64;
 
     loop {
         match iter.next() {
@@ -144,11 +152,11 @@ pub fn part1(input: &str) -> u32 {
             Some(b'\n') => {
                 break;
             }
-            Some(b'B') => total += handle_machine_part1(&mut it),
+            Some(b'B') => total += unsafe { handle_machine_part1(&mut it) },
             None => break,
             _ => unsafe {
                 unreachable_unchecked();
-            }
+            },
         };
     }
 
@@ -168,11 +176,11 @@ pub fn part2(input: &str) -> u64 {
             Some(b'\n') => {
                 break;
             }
-            Some(b'B') => total += handle_machine_part2(&mut it),
+            Some(b'B') => total += unsafe { handle_machine_part2(&mut it) },
             None => break,
             _ => unsafe {
                 unreachable_unchecked();
-            }
+            },
         };
     }
 
