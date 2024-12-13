@@ -11,9 +11,9 @@ unsafe fn handle_machine_part1(iter: &mut std::slice::Iter<u8>) -> u32 {
     let b_x = (*ptr.add(32) - b'0') * 10 + (*ptr.add(33) - b'0');
     let b_y = (*ptr.add(38) - b'0') * 10 + (*ptr.add(39) - b'0');
 
-    *iter = slice[50..].iter();
+    let mut t_x = (*ptr.add(50) - b'0') as u32;
 
-    let mut t_x = (iter.next().unwrap() - b'0') as u32;
+    *iter = slice[51..].iter();
 
     loop {
         match iter.next() {
@@ -29,7 +29,12 @@ unsafe fn handle_machine_part1(iter: &mut std::slice::Iter<u8>) -> u32 {
         }
     }
 
-    let mut t_y = (iter.nth(3).unwrap() - b'0') as u32;
+    let slice = iter.as_slice();
+    let ptr = slice.as_ptr();
+
+    let mut t_y = (*ptr.add(3) - b'0') as u32;
+
+    *iter = slice[4..].iter();
 
     loop {
         match iter.next() {
@@ -80,9 +85,9 @@ unsafe fn handle_machine_part2(iter: &mut std::slice::Iter<u8>) -> u64 {
     let b_x = (*ptr.add(32) - b'0') * 10 + (*ptr.add(33) - b'0');
     let b_y = (*ptr.add(38) - b'0') * 10 + (*ptr.add(39) - b'0');
 
-    *iter = slice[50..].iter();
+    let mut t_x = (*ptr.add(50) - b'0') as u64;
 
-    let mut t_x = (iter.next().unwrap() - b'0') as u64;
+    *iter = slice[51..].iter();
 
     loop {
         match iter.next() {
@@ -98,7 +103,12 @@ unsafe fn handle_machine_part2(iter: &mut std::slice::Iter<u8>) -> u64 {
         }
     }
 
-    let mut t_y = (iter.nth(3).unwrap() - b'0') as u64;
+    let slice = iter.as_slice();
+    let ptr = slice.as_ptr();
+
+    let mut t_y = (*ptr.add(3) - b'0') as u64;
+
+    *iter = slice[4..].iter();
 
     loop {
         match iter.next() {
