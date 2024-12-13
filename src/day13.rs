@@ -1,3 +1,5 @@
+use std::hint::unreachable_unchecked;
+
 #[inline(always)]
 fn handle_machine_part1(iter: &mut std::slice::Iter<u8>) -> Option<u32> {
     let a_x = (iter.skip(11).next().unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
@@ -17,7 +19,7 @@ fn handle_machine_part1(iter: &mut std::slice::Iter<u8>) -> Option<u32> {
                 t_x = t_x * 10 + (x - b'0') as u32;
             }
             _ => {
-                panic!("Unexpected byte parsing t_x");
+                unreachable!();
             }
         }
     }
@@ -40,13 +42,13 @@ fn handle_machine_part1(iter: &mut std::slice::Iter<u8>) -> Option<u32> {
 
     iter.next();
 
-    let d = a_x as i64 * b_y as i64 - a_y as i64 * b_x as i64;
+    let d = a_x as i32 * b_y as i32 - a_y as i32 * b_x as i32;
     if d == 0 {
         return None;
     }
 
-    let top_a = t_x as i64 * b_y as i64 - t_y as i64 * b_x as i64;
-    let top_b = t_y as i64 * a_x as i64 - t_x as i64 * a_y as i64;
+    let top_a = t_x as i32 * b_y as i32 - t_y as i32 * b_x as i32;
+    let top_b = t_y as i32 * a_x as i32 - t_x as i32 * a_y as i32;
 
     if top_a % d != 0 || top_b % d != 0 {
         return None;
@@ -81,7 +83,7 @@ fn handle_machine_part2(iter: &mut std::slice::Iter<u8>) -> Option<u64> {
                 t_x = t_x * 10 + (x - b'0') as u64;
             }
             _ => {
-                panic!("Unexpected byte parsing t_x");
+                unreachable!();
             }
         }
     }
@@ -144,8 +146,8 @@ pub fn part1(input: &str) -> u32 {
             }
             Some(b'B') => total += handle_machine_part1(&mut it).unwrap_or_else(|| 0),
             None => break,
-            _ => {
-                panic!("Unexpected byte");
+            _ => unsafe {
+                unreachable_unchecked();
             }
         };
     }
@@ -168,8 +170,8 @@ pub fn part2(input: &str) -> u64 {
             }
             Some(b'B') => total += handle_machine_part2(&mut it).unwrap_or_else(|| 0),
             None => break,
-            _ => {
-                panic!("Unexpected byte");
+            _ => unsafe {
+                unreachable_unchecked();
             }
         };
     }
