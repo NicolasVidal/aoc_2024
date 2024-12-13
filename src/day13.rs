@@ -3,12 +3,13 @@ use std::hint::unreachable_unchecked;
 #[inline(always)]
 unsafe fn handle_machine_part1(iter: &mut std::slice::Iter<u8>) -> u32 {
     let slice = iter.as_slice();
+    let ptr = slice.as_ptr();
 
-    let a_x = (*slice.get_unchecked(11) - b'0') * 10 + *slice.get_unchecked(12) - b'0';
-    let a_y = (*slice.get_unchecked(17) - b'0') * 10 + *slice.get_unchecked(18) - b'0';
+    let a_x = (*ptr.add(11) - b'0') * 10 + (*ptr.add(12) - b'0');
+    let a_y = (*ptr.add(17) - b'0') * 10 + (*ptr.add(18) - b'0');
 
-    let b_x = (*slice.get_unchecked(32) - b'0') * 10 + *slice.get_unchecked(33) - b'0';
-    let b_y = (*slice.get_unchecked(38) - b'0') * 10 + *slice.get_unchecked(39) - b'0';
+    let b_x = (*ptr.add(32) - b'0') * 10 + (*ptr.add(33) - b'0');
+    let b_y = (*ptr.add(38) - b'0') * 10 + (*ptr.add(39) - b'0');
 
     *iter = slice[50..].iter();
 
@@ -71,12 +72,13 @@ unsafe fn handle_machine_part1(iter: &mut std::slice::Iter<u8>) -> u32 {
 #[inline(always)]
 unsafe fn handle_machine_part2(iter: &mut std::slice::Iter<u8>) -> u64 {
     let slice = iter.as_slice();
+    let ptr = slice.as_ptr();
 
-    let a_x = (*slice.get_unchecked(11) - b'0') * 10 + *slice.get_unchecked(12) - b'0';
-    let a_y = (*slice.get_unchecked(17) - b'0') * 10 + *slice.get_unchecked(18) - b'0';
+    let a_x = (*ptr.add(11) - b'0') * 10 + (*ptr.add(12) - b'0');
+    let a_y = (*ptr.add(17) - b'0') * 10 + (*ptr.add(18) - b'0');
 
-    let b_x = (*slice.get_unchecked(32) - b'0') * 10 + *slice.get_unchecked(33) - b'0';
-    let b_y = (*slice.get_unchecked(38) - b'0') * 10 + *slice.get_unchecked(39) - b'0';
+    let b_x = (*ptr.add(32) - b'0') * 10 + (*ptr.add(33) - b'0');
+    let b_y = (*ptr.add(38) - b'0') * 10 + (*ptr.add(39) - b'0');
 
     *iter = slice[50..].iter();
 
