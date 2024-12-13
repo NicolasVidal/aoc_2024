@@ -1,14 +1,14 @@
 use std::hint::unreachable_unchecked;
 
 #[inline(always)]
-fn handle_machine_part1(iter: &mut std::slice::Iter<u8>) -> Option<u32> {
-    let a_x = (iter.skip(11).next().unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
-    let a_y = (iter.skip(4).next().unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
+fn handle_machine_part1(iter: &mut std::slice::Iter<u8>) -> u32 {
+    let a_x = (iter.nth(11).unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
+    let a_y = (iter.nth(4).unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
 
-    let b_x = (iter.skip(13).next().unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
-    let b_y = (iter.skip(4).next().unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
+    let b_x = (iter.nth(13).unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
+    let b_y = (iter.nth(4).unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
 
-    let mut t_x = (iter.skip(10).next().unwrap() - b'0') as u32;
+    let mut t_x = (iter.nth(10).unwrap() - b'0') as u32;
 
     loop {
         match iter.next() {
@@ -24,7 +24,7 @@ fn handle_machine_part1(iter: &mut std::slice::Iter<u8>) -> Option<u32> {
         }
     }
 
-    let mut t_y = (iter.skip(3).next().unwrap() - b'0') as u32;
+    let mut t_y = (iter.nth(3).unwrap() - b'0') as u32;
 
     loop {
         match iter.next() {
@@ -44,35 +44,35 @@ fn handle_machine_part1(iter: &mut std::slice::Iter<u8>) -> Option<u32> {
 
     let d = a_x as i32 * b_y as i32 - a_y as i32 * b_x as i32;
     if d == 0 {
-        return None;
+        return 0;
     }
 
     let top_a = t_x as i32 * b_y as i32 - t_y as i32 * b_x as i32;
     let top_b = t_y as i32 * a_x as i32 - t_x as i32 * a_y as i32;
 
     if top_a % d != 0 || top_b % d != 0 {
-        return None;
+        return 0;
     }
 
     let a = top_a / d;
     let b = top_b / d;
 
     if a < 0 || b < 0 {
-        return None;
+        return 0;
     }
 
-    Some((3 * a + b) as u32)
+    (3 * a + b) as u32
 }
 
 #[inline(always)]
-fn handle_machine_part2(iter: &mut std::slice::Iter<u8>) -> Option<u64> {
-    let a_x = (iter.skip(11).next().unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
-    let a_y = (iter.skip(4).next().unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
+fn handle_machine_part2(iter: &mut std::slice::Iter<u8>) -> u64 {
+    let a_x = (iter.nth(11).unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
+    let a_y = (iter.nth(4).unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
 
-    let b_x = (iter.skip(13).next().unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
-    let b_y = (iter.skip(4).next().unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
+    let b_x = (iter.nth(13).unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
+    let b_y = (iter.nth(4).unwrap() - b'0') * 10 + iter.next().unwrap() - b'0';
 
-    let mut t_x = (iter.skip(10).next().unwrap() - b'0') as u64;
+    let mut t_x = (iter.nth(10).unwrap() - b'0') as u64;
 
     loop {
         match iter.next() {
@@ -88,7 +88,7 @@ fn handle_machine_part2(iter: &mut std::slice::Iter<u8>) -> Option<u64> {
         }
     }
 
-    let mut t_y = (iter.skip(3).next().unwrap() - b'0') as u64;
+    let mut t_y = (iter.nth(3).unwrap() - b'0') as u64;
 
     loop {
         match iter.next() {
@@ -111,24 +111,24 @@ fn handle_machine_part2(iter: &mut std::slice::Iter<u8>) -> Option<u64> {
 
     let d = a_x as i64 * b_y as i64 - a_y as i64 * b_x as i64;
     if d == 0 {
-        return None;
+        return 0;
     }
 
     let top_a = t_x as i64 * b_y as i64 - t_y as i64 * b_x as i64;
     let top_b = t_y as i64 * a_x as i64 - t_x as i64 * a_y as i64;
 
     if top_a % d != 0 || top_b % d != 0 {
-        return None;
+        return 0;
     }
 
     let a = top_a / d;
     let b = top_b / d;
 
     if a < 0 || b < 0 {
-        return None;
+        return 0;
     }
 
-    Some((3 * a + b) as u64)
+    (3 * a + b) as u64
 }
 
 #[aoc(day13, part1)]
@@ -144,7 +144,7 @@ pub fn part1(input: &str) -> u32 {
             Some(b'\n') => {
                 break;
             }
-            Some(b'B') => total += handle_machine_part1(&mut it).unwrap_or_else(|| 0),
+            Some(b'B') => total += handle_machine_part1(&mut it),
             None => break,
             _ => unsafe {
                 unreachable_unchecked();
@@ -168,7 +168,7 @@ pub fn part2(input: &str) -> u64 {
             Some(b'\n') => {
                 break;
             }
-            Some(b'B') => total += handle_machine_part2(&mut it).unwrap_or_else(|| 0),
+            Some(b'B') => total += handle_machine_part2(&mut it),
             None => break,
             _ => unsafe {
                 unreachable_unchecked();
