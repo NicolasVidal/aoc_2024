@@ -23,7 +23,7 @@ unsafe fn handle_machine_part1(iter: &mut std::slice::Iter<u8>) -> u32 {
                 t_x = t_x * 10 + (x - b'0') as u32;
             }
             _ => {
-                unreachable!();
+                unreachable_unchecked();
             }
         }
     }
@@ -91,7 +91,7 @@ unsafe fn handle_machine_part2(iter: &mut std::slice::Iter<u8>) -> u64 {
                 t_x = t_x * 10 + (x - b'0') as u64;
             }
             _ => {
-                unreachable!();
+                unreachable_unchecked();
             }
         }
     }
