@@ -56,6 +56,10 @@ harness = false
 name = "day13"
 harness = false
 
+[[bench]]
+name = "day14"
+harness = false
+
 [lib]
 bench = false
 
@@ -71,3 +75,4 @@ heapless = "0.8.0"
 memchr = "2.7.4"
 rustc-hash = "2.1.0"
 criterion = { package = "codspeed-criterion-compat", version = "*" }
+image = "0.25.5"
