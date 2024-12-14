@@ -31,12 +31,12 @@ fn split_number_in_half(n: u64, digits: u32) -> (u64, u64) {
 fn compute_day_11(input: &str, count: u64) -> u64 {
     let bytes = input.as_bytes();
 
-    let mut iterator = bytes.iter();
+    let iterator = bytes.iter();
 
     let mut numbers = Vec::new();
 
     let mut id = 0u64;
-    while let Some(&b) = iterator.next() {
+    for &b in iterator {
         match b {
             b' ' => {
                 numbers.push(id);
@@ -45,7 +45,7 @@ fn compute_day_11(input: &str, count: u64) -> u64 {
             b'\n' => {
                 break;
             }
-            n if (b'0'..=b'9').contains(&n) => {
+            n if n.is_ascii_digit() => {
                 id = id * 10 + (n - b'0') as u64;
             }
             _ => {}

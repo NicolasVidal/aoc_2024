@@ -1,5 +1,4 @@
 use std::hint::unreachable_unchecked;
-use image::Luma;
 
 #[inline(always)]
 fn parse_number_and_advance_u8(ptr: *const u8, original_idx: &mut usize, end_byte: u8) -> u8 {
@@ -76,7 +75,7 @@ fn parse_number_to_the_end_and_advance_i8(
 pub fn part1(input: &str) -> u32 {
     let bytes = input.as_bytes();
     let bytes_len = bytes.len();
-    let mut bytes_ptr = bytes.as_ptr();
+    let bytes_ptr = bytes.as_ptr();
     let mut idx = 0usize;
 
     const COLS: i32 = 101;
@@ -140,18 +139,11 @@ pub fn part2(input: &str) -> u64 {
     const COLS: i32 = 101;
     const ROWS: i32 = 103;
 
-// 20240 : not that
-    // 8050 too low wtf ?!?
-    for seconds in 5020..55348 {
+    for seconds in 0.. {
         let safe_x_displacement: i32 = seconds * COLS;
         let safe_y_displacement: i32 = seconds * ROWS;
 
-        let mut top_left_quadrant = 0u32;
-        let mut top_right_quadrant = 0u32;
-        let mut bottom_left_quadrant = 0u32;
-        let mut bottom_right_quadrant = 0u32;
-
-        let mut array = [false; (ROWS * COLS) as usize];
+        let mut array = [0u8; (ROWS * COLS) as usize];
 
         let mut idx = 0usize;
         loop {
@@ -176,57 +168,16 @@ pub fn part2(input: &str) -> u64 {
             let final_x = (x + safe_x_displacement + seconds * dx) % COLS;
             let final_y = (y + safe_y_displacement + seconds * dy) % ROWS;
 
-            array[(final_y * COLS) as usize + final_x as usize] = true;
-
-            if final_x < COLS / 2 {
-                if final_y < ROWS / 2 {
-                    top_left_quadrant += 1;
-                } else if final_y > ROWS / 2 {
-                    bottom_left_quadrant += 1;
-                }
-            } else if final_x > COLS / 2 {
-                if final_y < ROWS / 2 {
-                    top_right_quadrant += 1;
-                } else if final_y > ROWS / 2 {
-                    bottom_right_quadrant += 1;
-                }
-            }
-
+            array[(final_y * COLS) as usize + final_x as usize] = 1;
         }
 
-        // 4747 too low
-        // if middle_center_top >= 1 &&
-        // if top_left_quadrant < bottom_left_quadrant &&
-        //     top_right_quadrant < bottom_right_quadrant {
-        //     for y in 0..ROWS {
-        //         for x in 0..COLS {
-        //             if array[(y * COLS + x) as usize] {
-        //                 print!("#");
-        //             } else {
-        //                 print!(".");
-        //             }
-        //         }
-        //         println!();
-        //     }
-        //     // }
-        //     println!("Seconds : {seconds}");
-        //     println!();
-
-            // Write the same print into a bmp file
-            let mut img = image::ImageBuffer::new(COLS as u32, ROWS as u32);
-            for y in 0..ROWS {
-                for x in 0..COLS {
-                    if array[(y * COLS + x) as usize] {
-                        img.put_pixel(x as u32, y as u32, Luma([0u8]));
-                    } else {
-                        img.put_pixel(x as u32, y as u32, Luma([255u8]));
-                    }
-                }
+        for pos in memchr::memrchr3_iter(1, 1, 1, &array[..(bytes_len - 31)]) {
+            if array[pos + 3..pos + 20].iter().all(|&x| x == 1) {
+                return seconds as u64;
             }
-            img.save(format!("/mnt/f/aoc_2024/img_outputs/output_{seconds}.bmp")).unwrap();
-        // }
+        }
+
     }
 
-    42
-    // unsafe { unreachable_unchecked() }
+    unsafe { unreachable_unchecked() }
 }

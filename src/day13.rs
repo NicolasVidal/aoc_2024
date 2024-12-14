@@ -88,8 +88,8 @@ unsafe fn handle_machine_part2(ptr: *const u8, original_idx: &mut usize, max_len
 
     *original_idx = *original_idx + idx + 2;
 
-    t_x = t_x + 10000000000000;
-    t_y = t_y + 10000000000000;
+    t_x += 10000000000000;
+    t_y += 10000000000000;
 
     let d = a_x as i64 * b_y as i64 - a_y as i64 * b_x as i64;
     if d == 0 {

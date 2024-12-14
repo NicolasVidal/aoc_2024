@@ -157,7 +157,7 @@ pub fn part2(input: &str) -> u64 {
             if start == v.len() || start > end {
                 continue 'rev;
             }
-            while let Some(_) = v[start] {
+            while v[start].is_some() {
                 start += 1;
                 if start == v.len() || start > end {
                     continue 'rev;
@@ -165,7 +165,7 @@ pub fn part2(input: &str) -> u64 {
             }
 
             let mut count_spaces = 0;
-            while let None = v[start] {
+            while v[start].is_none() {
                 start += 1;
                 count_spaces += 1;
                 if count_spaces == count {
