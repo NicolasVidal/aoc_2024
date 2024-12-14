@@ -1,9 +1,9 @@
 use std::hint::unreachable_unchecked;
 
 #[inline(always)]
-unsafe fn handle_machine_part1(iter: &mut std::slice::Iter<u8>) -> u32 {
-    let slice = iter.as_slice();
-    let ptr = slice.as_ptr();
+unsafe fn handle_machine_part1(ptr: *const u8, original_idx: &mut usize, max_len: usize) -> u32 {
+    let ptr = ptr.add(*original_idx);
+    let max_len = max_len - *original_idx;
 
     let a_x = (*ptr.add(11) - b'0') * 10 + (*ptr.add(12) - b'0');
     let a_y = (*ptr.add(17) - b'0') * 10 + (*ptr.add(18) - b'0');
@@ -11,30 +11,27 @@ unsafe fn handle_machine_part1(iter: &mut std::slice::Iter<u8>) -> u32 {
     let b_x = (*ptr.add(32) - b'0') * 10 + (*ptr.add(33) - b'0');
     let b_y = (*ptr.add(38) - b'0') * 10 + (*ptr.add(39) - b'0');
 
-    let mut t_x = (*ptr.add(50) - b'0') as u32;
+    let mut t_x = (*ptr.add(50) - b'0') as u64;
 
     let mut idx = 51;
 
     while *ptr.add(idx) != b',' {
-        t_x = t_x * 10 + (*ptr.add(idx) - b'0') as u32;
+        t_x = t_x * 10 + (*ptr.add(idx) - b'0') as u64;
         idx += 1;
     }
 
     idx += 4;
 
-    let mut t_y = (*ptr.add(idx) - b'0') as u32;
+    let mut t_y = (*ptr.add(idx) - b'0') as u64;
 
     idx += 1;
 
-    let slice_len = slice.len();
-    while idx < slice_len && *ptr.add(idx) != b'\n' {
-        t_y = t_y * 10 + (*ptr.add(idx) - b'0') as u32;
+    while idx < max_len && *ptr.add(idx) != b'\n' {
+        t_y = t_y * 10 + (*ptr.add(idx) - b'0') as u64;
         idx += 1;
     }
 
-    *iter = slice[idx..].iter();
-    iter.next();
-    iter.next();
+    *original_idx = *original_idx + idx + 2;
 
     let d = a_x as i32 * b_y as i32 - a_y as i32 * b_x as i32;
     if d == 0 {
@@ -59,9 +56,9 @@ unsafe fn handle_machine_part1(iter: &mut std::slice::Iter<u8>) -> u32 {
 }
 
 #[inline(always)]
-unsafe fn handle_machine_part2(iter: &mut std::slice::Iter<u8>) -> u64 {
-    let slice = iter.as_slice();
-    let ptr = slice.as_ptr();
+unsafe fn handle_machine_part2(ptr: *const u8, original_idx: &mut usize, max_len: usize) -> u64 {
+    let ptr = ptr.add(*original_idx);
+    let max_len = max_len - *original_idx;
 
     let a_x = (*ptr.add(11) - b'0') * 10 + (*ptr.add(12) - b'0');
     let a_y = (*ptr.add(17) - b'0') * 10 + (*ptr.add(18) - b'0');
@@ -84,15 +81,12 @@ unsafe fn handle_machine_part2(iter: &mut std::slice::Iter<u8>) -> u64 {
 
     idx += 1;
 
-    let slice_len = slice.len();
-    while idx < slice_len && *ptr.add(idx) != b'\n' {
+    while idx < max_len && *ptr.add(idx) != b'\n' {
         t_y = t_y * 10 + (*ptr.add(idx) - b'0') as u64;
         idx += 1;
     }
 
-    *iter = slice[idx..].iter();
-    iter.next();
-    iter.next();
+    *original_idx = *original_idx + idx + 2;
 
     t_x = t_x + 10000000000000;
     t_y = t_y + 10000000000000;
@@ -121,23 +115,25 @@ unsafe fn handle_machine_part2(iter: &mut std::slice::Iter<u8>) -> u64 {
 
 #[aoc(day13, part1)]
 pub fn part1(input: &str) -> u32 {
-    let bytes = input.as_bytes();
-
-    let mut it = bytes.iter();
+    let bytes_len = input.len();
+    let ptr = input.as_bytes().as_ptr();
+    let mut idx = 0usize;
 
     let mut total = 0u32;
 
-    loop {
-        match it.next() {
-            Some(b'\n') => {
-                break;
-            }
-            Some(b'B') => total += unsafe { handle_machine_part1(&mut it) },
-            None => break,
-            _ => unsafe {
-                unreachable_unchecked();
-            },
-        };
+    unsafe {
+        while idx < bytes_len {
+            match *ptr.add(idx) {
+                b'\n' => {
+                    break;
+                }
+                b'B' => {
+                    idx += 1;
+                    total += handle_machine_part1(ptr, &mut idx, bytes_len)
+                },
+                _ => unreachable_unchecked(),
+            };
+        }
     }
 
     total
@@ -145,24 +141,38 @@ pub fn part1(input: &str) -> u32 {
 
 #[aoc(day13, part2)]
 pub fn part2(input: &str) -> u64 {
-    let bytes = input.as_bytes();
-
-    let mut it = bytes.iter();
+    let bytes_len = input.len();
+    let ptr = input.as_bytes().as_ptr();
+    let mut idx = 0usize;
 
     let mut total = 0u64;
 
-    loop {
-        match it.next() {
-            Some(b'\n') => {
-                break;
-            }
-            Some(b'B') => total += unsafe { handle_machine_part2(&mut it) },
-            None => break,
-            _ => unsafe {
-                unreachable_unchecked();
-            },
-        };
+    unsafe {
+        while idx < bytes_len {
+            match *ptr.add(idx) {
+                b'\n' => {
+                    break;
+                }
+                b'B' => {
+                    idx += 1;
+                    total += handle_machine_part2(ptr, &mut idx, bytes_len)
+                },
+                _ => unreachable_unchecked(),
+            };
+        }
     }
 
     total
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_part1() {
+        let input = include_str!("../input/2024/day13.txt");
+        assert_eq!(part1(input), 29023);
+        assert_eq!(part2(input), 96787395375634);
+    }
 }
