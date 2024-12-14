@@ -13,43 +13,27 @@ unsafe fn handle_machine_part1(iter: &mut std::slice::Iter<u8>) -> u32 {
 
     let mut t_x = (*ptr.add(50) - b'0') as u32;
 
-    *iter = slice[51..].iter();
+    let mut idx = 51;
 
-    loop {
-        match iter.next() {
-            Some(b',') => {
-                break;
-            }
-            Some(&x) => {
-                t_x = t_x * 10 + (x - b'0') as u32;
-            }
-            _ => {
-                unreachable_unchecked();
-            }
-        }
+    while *ptr.add(idx) != b',' {
+        t_x = t_x * 10 + (*ptr.add(idx) - b'0') as u32;
+        idx += 1;
     }
 
-    let slice = iter.as_slice();
-    let ptr = slice.as_ptr();
+    idx += 4;
 
-    let mut t_y = (*ptr.add(3) - b'0') as u32;
+    let mut t_y = (*ptr.add(idx) - b'0') as u32;
 
-    *iter = slice[4..].iter();
+    idx += 1;
 
-    loop {
-        match iter.next() {
-            Some(b'\n') => {
-                break;
-            }
-            Some(&y) => {
-                t_y = t_y * 10 + (y - b'0') as u32;
-            }
-            None => {
-                break;
-            }
-        }
+    let slice_len = slice.len();
+    while idx < slice_len && *ptr.add(idx) != b'\n' {
+        t_y = t_y * 10 + (*ptr.add(idx) - b'0') as u32;
+        idx += 1;
     }
 
+    *iter = slice[idx..].iter();
+    iter.next();
     iter.next();
 
     let d = a_x as i32 * b_y as i32 - a_y as i32 * b_x as i32;
@@ -87,43 +71,27 @@ unsafe fn handle_machine_part2(iter: &mut std::slice::Iter<u8>) -> u64 {
 
     let mut t_x = (*ptr.add(50) - b'0') as u64;
 
-    *iter = slice[51..].iter();
+    let mut idx = 51;
 
-    loop {
-        match iter.next() {
-            Some(b',') => {
-                break;
-            }
-            Some(&x) => {
-                t_x = t_x * 10 + (x - b'0') as u64;
-            }
-            _ => {
-                unreachable_unchecked();
-            }
-        }
+    while *ptr.add(idx) != b',' {
+        t_x = t_x * 10 + (*ptr.add(idx) - b'0') as u64;
+        idx += 1;
     }
 
-    let slice = iter.as_slice();
-    let ptr = slice.as_ptr();
+    idx += 4;
 
-    let mut t_y = (*ptr.add(3) - b'0') as u64;
+    let mut t_y = (*ptr.add(idx) - b'0') as u64;
 
-    *iter = slice[4..].iter();
+    idx += 1;
 
-    loop {
-        match iter.next() {
-            Some(b'\n') => {
-                break;
-            }
-            Some(&y) => {
-                t_y = t_y * 10 + (y - b'0') as u64;
-            }
-            None => {
-                break;
-            }
-        }
+    let slice_len = slice.len();
+    while idx < slice_len && *ptr.add(idx) != b'\n' {
+        t_y = t_y * 10 + (*ptr.add(idx) - b'0') as u64;
+        idx += 1;
     }
 
+    *iter = slice[idx..].iter();
+    iter.next();
     iter.next();
 
     t_x = t_x + 10000000000000;
