@@ -72,10 +72,10 @@ pub fn part1(input: &str) -> u64 {
                 let mut line = robot_pos.0 - 1;
                 let mut found = false;
                 loop {
-                    if (unsafe {*grid.get_unchecked(line).get_unchecked(robot_pos.1)}) == Cell::Wall {
+                    if (unsafe {*grid.get_unchecked_mut(line).get_unchecked_mut(robot_pos.1)}) == Cell::Wall {
                         break;
                     }
-                    if (unsafe {*grid.get_unchecked(line).get_unchecked(robot_pos.1)}) == Cell::Empty {
+                    if (unsafe {*grid.get_unchecked_mut(line).get_unchecked_mut(robot_pos.1)}) == Cell::Empty {
                         found = true;
                         break;
                     }
@@ -91,7 +91,7 @@ pub fn part1(input: &str) -> u64 {
 
                 while line != robot_pos.0 {
                     let next_pos = (line, robot_pos.1);
-                    (unsafe {*grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1) = *grid.get_unchecked(next_pos.0 + 1).get_unchecked(next_pos.1)});
+                    (unsafe {*grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1) = *grid.get_unchecked_mut(next_pos.0 + 1).get_unchecked_mut(next_pos.1)});
                     line += 1;
                 }
 
@@ -103,10 +103,10 @@ pub fn part1(input: &str) -> u64 {
                 let mut line = robot_pos.0 + 1;
                 let mut found = false;
                 loop {
-                    if (unsafe {*grid.get_unchecked(line).get_unchecked(robot_pos.1)}) == Cell::Wall {
+                    if (unsafe {*grid.get_unchecked_mut(line).get_unchecked_mut(robot_pos.1)}) == Cell::Wall {
                         break;
                     }
-                    if (unsafe {*grid.get_unchecked(line).get_unchecked(robot_pos.1)}) == Cell::Empty {
+                    if (unsafe {*grid.get_unchecked_mut(line).get_unchecked_mut(robot_pos.1)}) == Cell::Empty {
                         found = true;
                         break;
                     }
@@ -124,7 +124,7 @@ pub fn part1(input: &str) -> u64 {
 
                 while line != robot_pos.0 {
                     let next_pos = (line, robot_pos.1);
-                    (unsafe {*grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1) = *grid.get_unchecked(next_pos.0 - 1).get_unchecked(next_pos.1)});
+                    (unsafe {*grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1) = *grid.get_unchecked_mut(next_pos.0 - 1).get_unchecked_mut(next_pos.1)});
                     line -= 1;
                 }
 
@@ -136,10 +136,10 @@ pub fn part1(input: &str) -> u64 {
                 let mut col = robot_pos.1 + 1;
                 let mut found = false;
                 loop{
-                    if unsafe {*grid.get_unchecked(robot_pos.0).get_unchecked(col)} == Cell::Wall {
+                    if unsafe {*grid.get_unchecked_mut(robot_pos.0).get_unchecked_mut(col)} == Cell::Wall {
                         break;
                     }
-                    if unsafe {*grid.get_unchecked(robot_pos.0).get_unchecked(col)} == Cell::Empty {
+                    if unsafe {*grid.get_unchecked_mut(robot_pos.0).get_unchecked_mut(col)} == Cell::Empty {
                         found = true;
                         break;
                     }
@@ -157,7 +157,7 @@ pub fn part1(input: &str) -> u64 {
 
                 while col != robot_pos.1 {
                     let next_pos = (robot_pos.0, col);
-                    (unsafe {*grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1) = *grid.get_unchecked(next_pos.0).get_unchecked(next_pos.1 - 1)});
+                    (unsafe {*grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1) = *grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1 - 1)});
                     col -= 1;
                 }
 
@@ -169,10 +169,10 @@ pub fn part1(input: &str) -> u64 {
                 let mut col = robot_pos.1 - 1;
                 let mut found = false;
                 loop {
-                    if unsafe {*grid.get_unchecked(robot_pos.0).get_unchecked(col)} == Cell::Wall {
+                    if unsafe {*grid.get_unchecked_mut(robot_pos.0).get_unchecked_mut(col)} == Cell::Wall {
                         break;
                     }
-                    if unsafe {*grid.get_unchecked(robot_pos.0).get_unchecked(col)} == Cell::Empty {
+                    if unsafe {*grid.get_unchecked_mut(robot_pos.0).get_unchecked_mut(col)} == Cell::Empty {
                         found = true;
                         break;
                     }
@@ -190,7 +190,7 @@ pub fn part1(input: &str) -> u64 {
 
                 while col != robot_pos.1 {
                     let next_pos = (robot_pos.0, col);
-                    (unsafe {*grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1) = *grid.get_unchecked(next_pos.0).get_unchecked(next_pos.1 + 1)});
+                    (unsafe {*grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1) = *grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1 + 1)});
                     col += 1;
                 }
 
@@ -220,7 +220,7 @@ pub fn part1(input: &str) -> u64 {
     let mut total = 0u64;
     for row in 0..ROWS {
         for col in 0..COLS {
-            if unsafe {*grid.get_unchecked(row).get_unchecked(col) == Cell::Box} {
+            if unsafe {*grid.get_unchecked_mut(row).get_unchecked_mut(col) == Cell::Box} {
                 total += 100 * row as u64 + col as u64;
             }
         }
@@ -299,22 +299,22 @@ pub fn part2(input: &str) -> u64 {
                     current_cols_to_scan.insert(robot_pos.1);
                     let mut all_cols_to_scan = vec![current_cols_to_scan.clone()];
                     loop {
-                        if current_cols_to_scan.iter().any(|&b| *grid.get_unchecked(line).get_unchecked(b) == Cell::Wall) {
+                        if current_cols_to_scan.iter().any(|&b| *grid.get_unchecked_mut(line).get_unchecked_mut(b) == Cell::Wall) {
                             break;
                         }
-                        if current_cols_to_scan.iter().all(|&b| *grid.get_unchecked(line).get_unchecked(b) == Cell::Empty) {
+                        if current_cols_to_scan.iter().all(|&b| *grid.get_unchecked_mut(line).get_unchecked_mut(b) == Cell::Empty) {
                             found = true;
                             break;
                         }
                         let mut cloned = current_cols_to_scan.clone();
                         for &col in current_cols_to_scan.iter() {
-                            if *grid.get_unchecked(line).get_unchecked(col) == Cell::Empty {
+                            if *grid.get_unchecked_mut(line).get_unchecked_mut(col) == Cell::Empty {
                                 cloned.remove(&col);
                             }
-                            if *grid.get_unchecked(line).get_unchecked(col) == Cell::BoxLeft {
+                            if *grid.get_unchecked_mut(line).get_unchecked_mut(col) == Cell::BoxLeft {
                                 cloned.insert(col + 1);
                             }
-                            if *grid.get_unchecked(line).get_unchecked(col) == Cell::BoxRight {
+                            if *grid.get_unchecked_mut(line).get_unchecked_mut(col) == Cell::BoxRight {
                                 cloned.insert(col - 1);
                             }
                         }
@@ -334,7 +334,7 @@ pub fn part2(input: &str) -> u64 {
                     while line != robot_pos.0 {
                         for col in all_cols_to_scan.pop().unwrap() {
                             let next_pos = (line, col);
-                            *grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1) = *grid.get_unchecked(next_pos.0 + 1).get_unchecked(next_pos.1);
+                            *grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1) = *grid.get_unchecked_mut(next_pos.0 + 1).get_unchecked_mut(next_pos.1);
                             *grid.get_unchecked_mut(next_pos.0 + 1).get_unchecked_mut(next_pos.1) = Cell::Empty;
                         }
                         line += 1;
@@ -351,22 +351,22 @@ pub fn part2(input: &str) -> u64 {
                     current_cols_to_scan.insert(robot_pos.1);
                     let mut all_cols_to_scan = vec![current_cols_to_scan.clone()];
                     loop {
-                        if current_cols_to_scan.iter().any(|&b| *grid.get_unchecked(line).get_unchecked(b) == Cell::Wall) {
+                        if current_cols_to_scan.iter().any(|&b| *grid.get_unchecked_mut(line).get_unchecked_mut(b) == Cell::Wall) {
                             break;
                         }
-                        if current_cols_to_scan.iter().all(|&b| *grid.get_unchecked(line).get_unchecked(b) == Cell::Empty) {
+                        if current_cols_to_scan.iter().all(|&b| *grid.get_unchecked_mut(line).get_unchecked_mut(b) == Cell::Empty) {
                             found = true;
                             break;
                         }
                         let mut cloned = current_cols_to_scan.clone();
                         for &col in current_cols_to_scan.iter() {
-                            if *grid.get_unchecked(line).get_unchecked(col) == Cell::Empty {
+                            if *grid.get_unchecked_mut(line).get_unchecked_mut(col) == Cell::Empty {
                                 cloned.remove(&col);
                             }
-                            if *grid.get_unchecked(line).get_unchecked(col) == Cell::BoxLeft {
+                            if *grid.get_unchecked_mut(line).get_unchecked_mut(col) == Cell::BoxLeft {
                                 cloned.insert(col + 1);
                             }
-                            if *grid.get_unchecked(line).get_unchecked(col) == Cell::BoxRight {
+                            if *grid.get_unchecked_mut(line).get_unchecked_mut(col) == Cell::BoxRight {
                                 cloned.insert(col - 1);
                             }
                         }
@@ -386,7 +386,7 @@ pub fn part2(input: &str) -> u64 {
                     while line != robot_pos.0 {
                         for col in all_cols_to_scan.pop().unwrap() {
                             let next_pos = (line, col);
-                            *grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1) = *grid.get_unchecked(next_pos.0 - 1).get_unchecked(next_pos.1);
+                            *grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1) = *grid.get_unchecked_mut(next_pos.0 - 1).get_unchecked_mut(next_pos.1);
                             *grid.get_unchecked_mut(next_pos.0 - 1).get_unchecked_mut(next_pos.1) = Cell::Empty;
                         }
                         line -= 1;
@@ -400,10 +400,10 @@ pub fn part2(input: &str) -> u64 {
                     let mut col = robot_pos.1 + 1;
                     let mut found = false;
                     loop {
-                        if *grid.get_unchecked(robot_pos.0).get_unchecked(col) == Cell::Wall {
+                        if *grid.get_unchecked_mut(robot_pos.0).get_unchecked_mut(col) == Cell::Wall {
                             break;
                         }
-                        if *grid.get_unchecked(robot_pos.0).get_unchecked(col) == Cell::Empty {
+                        if *grid.get_unchecked_mut(robot_pos.0).get_unchecked_mut(col) == Cell::Empty {
                             found = true;
                             break;
                         }
@@ -421,7 +421,7 @@ pub fn part2(input: &str) -> u64 {
 
                     while col != robot_pos.1 {
                         let next_pos = (robot_pos.0, col);
-                        *grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1) = *grid.get_unchecked(next_pos.0).get_unchecked(next_pos.1 - 1);
+                        *grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1) = *grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1 - 1);
                         col -= 1;
                     }
 
@@ -433,10 +433,10 @@ pub fn part2(input: &str) -> u64 {
                     let mut col = robot_pos.1 - 1;
                     let mut found = false;
                     loop {
-                        if *grid.get_unchecked(robot_pos.0).get_unchecked(col) == Cell::Wall {
+                        if *grid.get_unchecked_mut(robot_pos.0).get_unchecked_mut(col) == Cell::Wall {
                             break;
                         }
-                        if *grid.get_unchecked(robot_pos.0).get_unchecked(col) == Cell::Empty {
+                        if *grid.get_unchecked_mut(robot_pos.0).get_unchecked_mut(col) == Cell::Empty {
                             found = true;
                             break;
                         }
@@ -454,7 +454,7 @@ pub fn part2(input: &str) -> u64 {
 
                     while col != robot_pos.1 {
                         let next_pos = (robot_pos.0, col);
-                        *grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1) = *grid.get_unchecked(next_pos.0).get_unchecked(next_pos.1 + 1);
+                        *grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1) = *grid.get_unchecked_mut(next_pos.0).get_unchecked_mut(next_pos.1 + 1);
                         col += 1;
                     }
 
@@ -485,7 +485,7 @@ pub fn part2(input: &str) -> u64 {
         let mut total = 0u64;
         for row in 0..ROWS {
             for col in 0..(COLS * 2) {
-                if *grid.get_unchecked(row).get_unchecked(col) == Cell::BoxLeft {
+                if *grid.get_unchecked_mut(row).get_unchecked_mut(col) == Cell::BoxLeft {
                     total += 100 * row as u64 + col as u64;
                 }
             }
